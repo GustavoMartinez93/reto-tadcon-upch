@@ -6,6 +6,17 @@ function UserList({ users, onEditSave, onDeleteUser }) {
     const [selectedUser, setSelectedUser] = useState(null);
     const [showEditModal, setShowEditModal] = useState(false);
     const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const usersPerPage = 5;
+
+    const indexOfLastUser = currentPage * usersPerPage;
+    const indexOfFirstUser = indexOfLastUser - usersPerPage;
+    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+    const totalPages = Math.ceil(users.length / usersPerPage);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const handleEditClick = (user) => {
         setSelectedUser(user);
@@ -41,7 +52,7 @@ function UserList({ users, onEditSave, onDeleteUser }) {
                 </tr>
             </thead>
             <tbody>
-                {users.map((user) => (
+                {currentUsers.map((user) => (
                 <tr key={user.id}>
                     <td><input type="checkbox" /></td>
                     <td><img src={user.image} alt={user.firstName} className="img-thumbnail" /></td>
@@ -87,9 +98,37 @@ function UserList({ users, onEditSave, onDeleteUser }) {
                 closeModals();
             }}
             />
+            
+            {/* Paginación */}
+            <div className="pagination mt-3">
+                <button 
+                    className="btn btn-outline-secondary" 
+                    onClick={() => paginate(currentPage - 1)} 
+                    disabled={currentPage === 1}
+                >
+                    Anterior
+                </button>
+                {[...Array(totalPages).keys()].map((number) => (
+                    <button
+                        key={number}
+                        className={`btn btn-outline-secondary mx-1 ${currentPage === number + 1 ? 'active' : ''}`}
+                        onClick={() => paginate(number + 1)}
+                    >
+                        {number + 1}
+                    </button>
+                ))}
+                <button 
+                    className="btn btn-outline-secondary" 
+                    onClick={() => paginate(currentPage + 1)} 
+                    disabled={currentPage === totalPages}
+                >
+                    Siguiente
+                </button>
+            </div>
         </div>
         </div>
     );
 }
+
 
 export default UserList;

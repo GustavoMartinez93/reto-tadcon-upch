@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-function Filter({ onSearch }) {
+function Filter({ ages, onSearch }) {
   const [age, setAge] = useState('18');
   const [gender, setGender] = useState('female');
 
@@ -18,12 +18,11 @@ function Filter({ onSearch }) {
               value={age}
               onChange={(e) => setAge(e.target.value)}
             >
-                <option value="18">18</option>
-                <option value="19">19</option>
-                <option value="20">20</option>
-                <option value="21">21</option>
-                <option value="22">22</option>
-                <option value="23">23</option>
+              {
+                ages.map((ageUs, index)=>{
+                  return <option key={index} value={ageUs}>{ageUs}</option>
+                })
+              }
             </select>
           </div>
           <div className="form-group col-sm-12 col-lg-4">

@@ -1,18 +1,25 @@
 import React, { useState, useEffect } from 'react';
 import Filter from '../components/Filter';
 import UserList from '../components/UserList';
-import { getUsersByFilters } from '../services/userService';
+import { getUsersByFilters, getAgesByUsers } from '../services/userService';
 
 function UsersPage() {
+  const [ages, setAges] = useState([]);
   const [users, setUsers] = useState([]);
   
   useEffect(() => {
+    fetchAges();
     fetchUsers();
   }, []);
 
   const fetchUsers = async (age, gender) => {
     const filteredUsers = await getUsersByFilters(age, gender);
     setUsers(filteredUsers);
+  };
+
+  const fetchAges = async () => {
+    const filteredAges = await getAgesByUsers();
+    setAges(filteredAges);
   };
 
   const handleEditSave = (updatedUser) => {
@@ -25,7 +32,7 @@ function UsersPage() {
 
   return (
     <div className="container pt-5">
-      <Filter onSearch={fetchUsers} />
+      <Filter ages={ages} onSearch={fetchUsers} />
       <UserList 
         users={users} 
         onEditSave={handleEditSave} 
